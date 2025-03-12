@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор калорий</title>
+    <link rel="stylesheet" href="css/index123.css">
+</head>
+<body>
+    <div class="container background">
+        <h1>Калькулятор калорий</h1>
+        
+        <form method="GET" class="color">
+            <div><label>Пол:</label></div>
+            <label>Мужчина <input type="radio" name="sex" value="male" required></label>
+            <label>Женщина <input type="radio" name="sex" value="female" required></label>
+            
+            <label class="color">Возраст:</label>
+            <input type="text" name="age" required> 
+            
+            <label class="color">Рост (см):</label>
+            <input type="text" name="height" required>
+            
+            <label class="color">Вес (кг):</label>
+            <input type="number" name="weight" required>
+            
+            <label class="color">Уровень активности:</label>
+            <select name="activity" class="color">
+                <option value="low">Низкий</option>
+                <option value="medium">Средний</option>
+                <option value="high">Высокий</option>
+            </select>
+            
+            <label>Цель:</label>
+            <select name="goal" class="color">
+                <option value="maintain">Поддержание веса</option>
+                <option value="lose">Похудение</option>
+                <option value="gain">Набор веса</option>
+            </select>
+            
+            <button type="submit">Рассчитать</button>
+        </form>
+
+        <h2>Результат:</h2>
+        <p id="result"></p>
+    </div>
+
+    <script>
+        document.querySelector('form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const sex = document.querySelector('input[name="sex"]:checked').value;
+            const age = parseInt(document.querySelector('input[name="age"]').value);
+            const height = parseInt(document.querySelector('input[name="height"]').value);
+            const weight = parseInt(document.querySelector('input[name="weight"]').value);
+            const activity = document.querySelector('select[name="activity"]').value;
+            const goal = document.querySelector('select[name="goal"]').value;  // Добавлено
+
+            let bmr;
+            if (sex === 'male') {
+                bmr = 88.36 + (13.4 * weight) + (4.8 * height) - (5.7 * age);
+            } else {
+                bmr = 447.6 + (9.2 * weight) + (3.1 * height) - (4.3 * age);
+            }
+
+            let activityMultiplier;
+            switch (activity) {
+                case 'low':
+                    activityMultiplier = 1.2;
+                    break;
+                case 'medium':
+                    activityMultiplier = 1.55;
+                    break;
+                case 'high':
+                    activityMultiplier = 1.725;
+                    break;
+            }
+
+            let dailyCalories = bmr * activityMultiplier;
+
+            switch (goal) {
+                case 'lose':
+                    dailyCalories -= 500;
+                    break;
+                case 'gain':
+                    dailyCalories += 500;
+                    break;
+                case 'maintain':
+                    break; // Для поддержания веса ничего не меняем
+            }
+
+            document.getElementById('result').textContent = `Ваши ежедневные калории: ${Math.round(dailyCalories)}`;
+        });
+    </script>
+</body>
+</html>
